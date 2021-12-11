@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="post">
+
+	<insert id ="insert" parameterType="postvo">
+		<![CDATA[
+		insert into post values(null, #{title }, #{contents }, now(), #{categoryNo })
+		]]>
+	</insert>
+	
+	<select id="findAll" parameterType="string" resultType="postvo">
+		<![CDATA[
+		select p.no, p.title, p.contents, date_format(p.reg_date, '%Y/%m/%d %h:%i:%s') as regDate, p.category_no as categoryNo
+		from post p join category c on p.category_no = c.no
+		where c.blog_id = #{blogId }
+		order by regDate desc
+		]]>
+	</select>
+	
+	<select id="findAllByCategoryNo" parameterType="map" resultType="postvo">
+		<![CDATA[
+		select p.no, p.title, p.contents, date_format(p.reg_date, '%Y/%m/%d %h:%i:%s') as regDate, p.category_no as categoryNo
+		from post p join category c on p.category_no = c.no
+		where c.blog_id = #{id }
+		and p.category_no = #{no }
+		order by regDate desc
+		]]>
+	</select>
+	
+	<select id="findLastPostVo"  resultType="postvo">
+		<![CDATA[
+		select no, title, contents, reg_date as regDate, category_no as categoryNo 
+		from post
+		order by reg_date desc
+		limit 0, 1
+		]]>
+	</select>
+	
+</mapper>
